@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smallprint — 반복 업무를 끝내는 AI 자동화</title>
+<meta name="description" content="매년 반복되는 인건비, 한 번의 자동화로 끝냅니다. 설계부터 사후 운영까지 책임지는 맞춤형 AI 자동화 파트너.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Smallprint — 반복 업무를 끝내는 AI 자동화">
+<meta property="og:description" content="매년 반복되는 인건비, 한 번의 자동화로 끝냅니다.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #f4f1ea;
+    --paper-deep: #ebe6da;
+    --ink: #16140f;
+    --ink-soft: #5a554a;
+    --ink-faint: #908a7c;
+    --line: #d8d2c4;
+    --accent: #1f4d3f;        /* deep forest green */
+    --accent-bright: #2d6e58;
+    --white: #fdfcf9;
+    --radius: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* 그레인 텍스처 오버레이 */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+  }
+
+  .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  /* ─── 레이아웃 ─── */
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section { position: relative; }
+
+  /* ─── 네비 ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(244, 241, 234, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  nav.scrolled { border-bottom-color: var(--line); }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+  .logo .dot { color: var(--accent); font-size: 26px; line-height: 0; }
+  .nav-links { display: flex; gap: 36px; align-items: center; }
+  .nav-links a {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 400;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px !important;
+    padding: 9px 18px;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    color: var(--ink) !important;
+    transition: all 0.2s ease;
+  }
+  .nav-cta:hover { background: var(--ink); color: var(--paper) !important; }
+  @media (max-width: 760px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+
+  /* ─── 히어로 ─── */
+  .hero {
+    padding: 180px 0 110px;
+    position: relative;
+  }
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: rise 0.8s ease 0.1s forwards;
+  }
+  .hero-tag::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(38px, 6.4vw, 78px);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    margin-bottom: 32px;
+    max-width: 16em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero h1 .ln {
+    display: block;
+    opacity: 0;
+    animation: rise 0.9s cubic-bezier(0.2,0.7,0.2,1) forwards;
+  }
+  .hero h1 .ln:nth-child(1) { animation-delay: 0.15s; }
+  .hero h1 .ln:nth-child(2) { animation-delay: 0.28s; }
+  .hero h1 .ln:nth-child(3) { animation-delay: 0.41s; }
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 19px);
+    color: var(--ink-soft);
+    max-width: 30em;
+    margin-bottom: 44px;
+    font-weight: 300;
+    opacity: 0;
+    animation: rise 0.9s ease 0.55s forwards;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    opacity: 0;
+    animation: rise 0.9s ease 0.7s forwards;
+  }
+
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    padding: 15px 30px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--ink);
+    transition: all 0.22s cubic-bezier(0.2,0.7,0.2,1);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(31,77,63,0.25);
+  }
+  .btn-primary .arrow { transition: transform 0.22s ease; }
+  .btn-primary:hover .arrow { transform: translateX(4px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+  /* 히어로 우측 장식 — 깨알 글씨 모티프 */
+  .hero-deco {
+    position: absolute;
+    top: 150px;
+    right: -20px;
+    width: 320px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8.5px;
+    line-height: 1.5;
+    color: var(--ink-faint);
+    opacity: 0.22;
+    text-align: justify;
+    transform: rotate(0deg);
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+    animation: fadein 1.4s ease 0.9s forwards;
+  }
+  @media (max-width: 980px) { .hero-deco { display: none; } }
+
+  /* ─── 통계 스트립 ─── */
+  .strip {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-deep);
+  }
+  .strip-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .strip-item {
+    padding: 40px 32px;
+    text-align: center;
+    border-right: 1px solid var(--line);
+  }
+  .strip-item:last-child { border-right: none; }
+  .strip-num {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 400;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .strip-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 300;
+  }
+  @media (max-width: 680px) {
+    .strip-inner { grid-template-columns: 1fr; }
+    .strip-item { border-right: none; border-bottom: 1px solid var(--line); }
+    .strip-item:last-child { border-bottom: none; }
+  }
+
+  /* ─── 섹션 공통 ─── */
+  .sec { padding: 110px 0; }
+  .sec-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec-label::before {
+    content: ""; width: 28px; height: 1px;
+    background: var(--accent); display: inline-block;
+  }
+  .sec-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 18em;
+    margin-bottom: 18px;
+  }
+  .sec-intro {
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 32em;
+    font-weight: 300;
+  }
+
+  /* 페이드 인 온 스크롤 */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2,0.7,0.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ─── 문제 제기 ─── */
+  .problem { background: var(--ink); color: var(--paper); }
+  .problem .sec-label { color: #8fc5b2; }
+  .problem .sec-label::before { background: #8fc5b2; }
+  .problem .sec-title { color: var(--white); }
+  .prob-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.1);
+    margin-top: 56px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .prob-card {
+    background: var(--ink);
+    padding: 38px 34px;
+  }
+  .prob-card .n {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #8fc5b2;
+    margin-bottom: 16px;
+  }
+  .prob-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 21px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+  .prob-card p {
+    font-size: 14.5px;
+    color: #b8b2a4;
+    font-weight: 300;
+  }
+  @media (max-width: 680px) { .prob-grid { grid-template-columns: 1fr; } }
+
+  /* ─── 솔루션 ─── */
+  .sol-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 60px;
+  }
+  .sol-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 38px 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .sol-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(22,20,15,0.08);
+  }
+  .sol-icon {
+    width: 44px; height: 44px;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    color: var(--accent);
+  }
+  .sol-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .sol-card p { font-size: 14.5px; color: var(--ink-soft); font-weight: 300; }
+  @media (max-width: 860px) { .sol-grid { grid-template-columns: 1fr; } }
+
+  /* ─── ROI 계산 ─── */
+  .roi { background: var(--paper-deep); }
+  .roi-box {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-top: 56px;
+    overflow: hidden;
+  }
+  .roi-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+    padding: 30px 40px;
+    border-bottom: 1px solid var(--line);
+    gap: 20px;
+  }
+  .roi-row:last-child { border-bottom: none; background: var(--accent); color: var(--white); }
+  .roi-row .lbl { font-size: 15.5px; font-weight: 300; }
+  .roi-row:last-child .lbl { color: var(--white); font-weight: 400; }
+  .roi-row .val {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 3vw, 32px);
+    text-align: right;
+    letter-spacing: -0.02em;
+  }
+  .roi-row .val.strike { color: var(--ink-faint); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .roi-row .val.good { color: var(--accent); }
+  .roi-row:last-child .val { color: var(--white); }
+  .roi-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-top: 18px;
+    text-align: center;
+  }
+  @media (max-width: 680px) {
+    .roi-row { grid-template-columns: 1fr; padding: 22px 26px; gap: 6px; }
+    .roi-row .val { text-align: left; }
+  }
+
+  /* ─── 프로세스 ─── */
+  .proc-list { margin-top: 56px; }
+  .proc-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 34px 0;
+    border-top: 1px solid var(--line);
+    align-items: start;
+  }
+  .proc-item:last-child { border-bottom: 1px solid var(--line); }
+  .proc-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    padding-top: 6px;
+  }
+  .proc-body h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .proc-body p { font-size: 15px; color: var(--ink-soft); font-weight: 300; max-width: 38em; }
+  @media (max-width: 680px) {
+    .proc-item { grid-template-columns: 50px 1fr; gap: 18px; }
+  }
+
+  /* ─── 최종 CTA ─── */
+  .final {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 130px 0;
+  }
+  .final h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(30px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    color: var(--white);
+  }
+  .final h2 em { font-style: italic; color: #8fc5b2; }
+  .final p { font-size: 17px; color: #b8b2a4; margin-bottom: 44px; font-weight: 300; }
+  .final .hero-actions { justify-content: center; }
+  .final .btn-primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .final .btn-primary:hover { background: var(--accent-bright); color: var(--white); border-color: var(--accent-bright); }
+  .final .btn-ghost { color: var(--paper); border-color: rgba(255,255,255,0.4); }
+  .final .btn-ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .final-contacts {
+    margin-top: 44px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-faint);
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .final-contacts a { color: #b8b2a4; text-decoration: none; transition: color 0.2s; }
+  .final-contacts a:hover { color: var(--white); }
+
+  /* ─── 푸터 ─── */
+  footer {
+    background: var(--paper);
+    padding: 50px 0;
+    border-top: 1px solid var(--line);
+  }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .foot-inner .logo { font-size: 18px; }
+  .foot-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fadein {
+    to { opacity: 0.22; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">Smallprint<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="#problem">문제</a>
+      <a href="#solution">해결</a>
+      <a href="#process">진행</a>
+      <a href="#contact" class="nav-cta">상담 예약</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── 히어로 ─── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-tag mono">AI BUSINESS AUTOMATION</div>
+    <h1>
+      <span class="ln">매년 반복되는 비용,</span>
+      <span class="ln">한 번의 자동화로</span>
+      <span class="ln"><em>끝냅니다.</em></span>
+    </h1>
+    <p class="hero-sub">
+      사람이 매일 반복하던 문의 응대, 견적 산출, 자료 정리.
+      설계부터 사후 운영까지 책임지는 맞춤형 시스템으로 옮겨드립니다.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">프로젝트 상담 예약 <span class="arrow">→</span></a>
+      <a href="#solution" class="btn btn-ghost">무엇을 자동화하나</a>
+    </div>
+  </div>
+  <div class="hero-deco mono">
+    제1조 (목적) 본 시스템은 귀사의 반복 업무를 자동화하여 운영 비용을 영구히 절감함을 목적으로 한다. 제2조 (범위) 고객 문의 응대, 견적 자동 산출, 자료 생성 및 발송, 데이터 정리 등 규칙으로 환원 가능한 모든 반복 업무를 포함한다. 제3조 (설계) 모든 자동화는 귀사의 실제 업무 흐름을 분석하여 맞춤 설계하며, 범용 템플릿을 그대로 적용하지 않는다. 제4조 (검수) 자동 생성된 모든 결과물은 발송 전 사람의 검수 단계를 거친다. 제5조 (책임) 구축 이후에도 지속적인 운영·수정·개선을 책임진다. 제6조 (효율) 단순 반복 문의의 80% 이상을 자동 처리하여, 사람은 판단이 필요한 일에 집중한다. 제7조 (보안) 모든 데이터는 암호화되어 처리되며 외부에 유출되지 않는다. 제8조 (확장) 업무 변화에 따라 시스템을 유연하게 확장한다.
+  </div>
+</section>
+
+<!-- ─── 통계 ─── -->
+<section class="strip">
+  <div class="strip-inner">
+    <div class="strip-item">
+      <div class="strip-num">80%</div>
+      <div class="strip-label">반복 문의 자동 처리</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-num">24/7</div>
+      <div class="strip-label">멈추지 않는 운영</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-num">1회</div>
+      <div class="strip-label">구축으로 영구히</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 문제 제기 ─── -->
+<section class="sec problem" id="problem">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-label mono">THE PROBLEM</div>
+      <h2 class="sec-title">사람이 반복하는 일에,<br>매년 사람 값이 나갑니다.</h2>
+    </div>
+    <div class="prob-grid reveal">
+      <div class="prob-card">
+        <div class="n mono">01</div>
+        <h3>같은 문의, 같은 답변</h3>
+        <p>"가격이 어떻게 되나요" "납기는요" — 하루에도 수십 번. 사람이 매번 똑같이 답하고 있습니다.</p>
+      </div>
+      <div class="prob-card">
+        <div class="n mono">02</div>
+        <h3>견적 하나에 반나절</h3>
+        <p>문의가 올 때마다 자료 찾고, 계산하고, 문서 만들고. 정작 중요한 일은 뒤로 밀립니다.</p>
+      </div>
+      <div class="prob-card">
+        <div class="n mono">03</div>
+        <h3>밤에는 멈추는 응대</h3>
+        <p>고객은 24시간 문의하는데, 사람은 9시 출근. 놓친 문의는 그대로 놓친 매출입니다.</p>
+      </div>
+      <div class="prob-card">
+        <div class="n mono">04</div>
+        <h3>늘어나는 인건비</h3>
+        <p>업무가 늘면 사람을 더 뽑습니다. 한 번 늘린 고정비는 매년, 영원히 나갑니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 솔루션 ─── -->
+<section class="sec" id="solution">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-label mono">WHAT WE DO</div>
+      <h2 class="sec-title">반복은 시스템에게,<br>판단은 사람에게.</h2>
+      <p class="sec-intro">범용 챗봇을 끼워 넣는 게 아닙니다. 귀사의 실제 업무 흐름을 분석해, 그 일을 대신하는 시스템을 직접 설계합니다.</p>
+    </div>
+    <div class="sol-grid">
+      <div class="sol-card reveal">
+        <div class="sol-icon mono">◑</div>
+        <h3>맞춤 설계</h3>
+        <p>업종과 업무에 맞춰 처음부터 설계합니다. 고객 문의 응대, 견적·제안서 자동 생성, 자료 정리까지 — 귀사에 꼭 맞는 흐름으로.</p>
+      </div>
+      <div class="sol-card reveal">
+        <div class="sol-icon mono">⊹</div>
+        <h3>사람의 검수</h3>
+        <p>자동이 곧 방치는 아닙니다. 중요한 결과물은 발송 전 사람이 확인하는 단계를 둡니다. 속도와 신뢰를 동시에.</p>
+      </div>
+      <div class="sol-card reveal">
+        <div class="sol-icon mono">↻</div>
+        <h3>끝까지 책임</h3>
+        <p>만들고 떠나지 않습니다. 업무가 바뀌면 시스템도 바뀌어야 합니다. 구축 이후의 운영·개선까지 함께합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ROI ─── -->
+<section class="sec roi" id="roi">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-label mono">THE MATH</div>
+      <h2 class="sec-title">계산은 단순합니다.</h2>
+      <p class="sec-intro">매년 나가는 반복 업무 인건비를, 한 번의 구축으로 대체합니다. 1년이면 본전, 그 다음부터는 매년 절감입니다.</p>
+    </div>
+    <div class="roi-box reveal">
+      <div class="roi-row">
+        <div class="lbl">반복 업무에 드는 연간 인건비 (예시)</div>
+        <div class="val strike">5,000만 원 / 년</div>
+      </div>
+      <div class="roi-row">
+        <div class="lbl">자동화 구축 (일회성)</div>
+        <div class="val good">1,500만 원</div>
+      </div>
+      <div class="roi-row">
+        <div class="lbl">2년 차부터 매년 절감</div>
+        <div class="val">+ 매년 수천만 원</div>
+      </div>
+    </div>
+    <p class="roi-note mono">* 실제 금액은 업무 범위와 복잡도에 따라 산정됩니다. 정확한 견적은 상담을 통해 안내드립니다.</p>
+  </div>
+</section>
+
+<!-- ─── 프로세스 ─── -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-label mono">HOW IT WORKS</div>
+      <h2 class="sec-title">진단부터 운영까지, 네 단계.</h2>
+    </div>
+    <div class="proc-list">
+      <div class="proc-item reveal">
+        <div class="proc-num mono">[ 01 ]</div>
+        <div class="proc-body">
+          <h3>진단</h3>
+          <p>어떤 일이 반복되는지, 그 일에 얼마가 드는지 함께 분석합니다. 자동화할 가치가 있는 일과 사람이 해야 할 일을 가려냅니다.</p>
+        </div>
+      </div>
+      <div class="proc-item reveal">
+        <div class="proc-num mono">[ 02 ]</div>
+        <div class="proc-body">
+          <h3>설계</h3>
+          <p>귀사의 업무 흐름에 맞는 시스템을 설계하고, 작동 방식과 예상 효과를 명확히 제안합니다.</p>
+        </div>
+      </div>
+      <div class="proc-item reveal">
+        <div class="proc-num mono">[ 03 ]</div>
+        <div class="proc-body">
+          <h3>구축</h3>
+          <p>설계한 시스템을 실제로 만들어 연동합니다. 기존에 쓰던 도구들과 자연스럽게 이어지도록.</p>
+        </div>
+      </div>
+      <div class="proc-item reveal">
+        <div class="proc-num mono">[ 04 ]</div>
+        <div class="proc-body">
+          <h3>운영</h3>
+          <p>가동 후에도 모니터링하고, 업무 변화에 맞춰 다듬습니다. 만들고 끝이 아니라, 계속 작동하게.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 최종 CTA ─── -->
+<section class="final" id="contact">
+  <div class="wrap">
+    <div class="reveal">
+      <h2>반복을 멈추는 건,<br><em>한 번의 대화</em>면 됩니다.</h2>
+      <p>어떤 일이 반복되는지 들려주세요. 자동화할 수 있는지, 얼마나 줄어드는지 먼저 진단해드립니다.</p>
+      <div class="hero-actions">
+        <a href="#" id="bookCta" class="btn btn-primary">프로젝트 상담 예약 <span class="arrow">→</span></a>
+        <a href="#" id="chatCta" class="btn btn-ghost">챗봇으로 먼저 물어보기</a>
+      </div>
+      <div class="final-contacts">
+        <a href="mailto:hello@smallprint.kr">hello@smallprint.kr</a>
+        <span>·</span>
+        <a href="tel:01000000000">010-0000-0000</a>
+        <span>·</span>
+        <a href="#">카카오톡 채널</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <a href="#" class="logo">Smallprint<span class="dot">.</span></a>
+    <div class="foot-meta mono">© 2026 Smallprint. AI Business Automation.</div>
+  </div>
+</footer>
+
+<script>
+  // 네비 스크롤 효과
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // 스크롤 리빌
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // 상담 예약 — 캘린들리 링크 자리 (임시: 메일)
+  document.getElementById('bookCta').addEventListener('click', (e) => {
+    e.preventDefault();
+    // TODO: 캘린들리 링크로 교체 → window.open('https://calendly.com/본인계정', '_blank');
+    window.location.href = 'mailto:hello@smallprint.kr?subject=프로젝트 상담 예약 문의';
+  });
+
+  // 챗봇으로 먼저 물어보기 — 챗봇 위젯 열기
+  document.getElementById('chatCta').addEventListener('click', (e) => {
+    e.preventDefault();
+    const fab = document.querySelector('.opsmedia-chat-fab');
+    if (fab) { fab.click(); }
+    else { window.location.href = 'mailto:hello@smallprint.kr'; }
+  });
+</script>
+
+<!-- ─── 챗봇 위젯 (배포 시 주석 해제 + URL 본인 것으로) ─── -->
+<!--
+<script src="https://joker44444.github.io/opsmedia-chatbot/chatbot.js"
+        data-api="https://본인Render도메인.onrender.com"
+        data-service="mediacraft"
+        defer></script>
+-->
+
+</body>
+</html>
