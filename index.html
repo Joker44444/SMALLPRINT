@@ -523,6 +523,8 @@
     to { opacity: 0.22; }
   }
 </style>
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </head>
 <body>
 
@@ -750,10 +752,11 @@
 
   // 상담 예약 — 캘린들리 링크 자리 (임시: 메일)
   document.getElementById('bookCta').addEventListener('click', (e) => {
-    e.preventDefault();
-    // TODO: 캘린들리 링크로 교체 → window.open('https://calendly.com/본인계정', '_blank');
-    window.location.href = 'mailto:hello@smallprint.kr?subject=프로젝트 상담 예약 문의';
+  e.preventDefault();
+  Calendly.initPopupWidget({
+    url: 'https://calendly.com/본인계정명/프로젝트-상담'
   });
+});
 
   // 챗봇으로 먼저 물어보기 — 챗봇 위젯 열기
   document.getElementById('chatCta').addEventListener('click', (e) => {
