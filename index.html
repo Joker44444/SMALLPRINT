@@ -224,25 +224,6 @@
   }
   .btn-ghost:hover { background: var(--ink); color: var(--paper); }
 
-  /* 히어로 우측 장식 — 깨알 글씨 모티프 */
-  .hero-deco {
-    position: absolute;
-    top: 150px;
-    right: -20px;
-    width: 320px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 8.5px;
-    line-height: 1.5;
-    color: var(--ink-faint);
-    opacity: 0.22;
-    text-align: justify;
-    transform: rotate(0deg);
-    pointer-events: none;
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
-    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
-    animation: fadein 1.4s ease 0.9s forwards;
-  }
-  @media (max-width: 980px) { .hero-deco { display: none; } }
 
   /* ─── 통계 스트립 ─── */
   .strip {
@@ -691,9 +672,7 @@
       <a href="#solution" class="btn btn-ghost">무엇을 자동화하나</a>
     </div>
   </div>
-  <div class="hero-deco mono">
-    제1조 (목적) 본 시스템은 귀사의 반복 업무를 자동화하여 운영 비용을 영구히 절감함을 목적으로 한다. 제2조 (범위) 고객 문의 응대, 견적 자동 산출, 자료 생성 및 발송, 데이터 정리 등 규칙으로 환원 가능한 모든 반복 업무를 포함한다. 제3조 (설계) 모든 자동화는 귀사의 실제 업무 흐름을 분석하여 맞춤 설계하며, 범용 템플릿을 그대로 적용하지 않는다. 제4조 (검수) 자동 생성된 모든 결과물은 발송 전 사람의 검수 단계를 거친다. 제5조 (책임) 구축 이후에도 지속적인 운영·수정·개선을 책임진다. 제6조 (효율) 단순 반복 문의의 80% 이상을 자동 처리하여, 사람은 판단이 필요한 일에 집중한다. 제7조 (보안) 모든 데이터는 암호화되어 처리되며 외부에 유출되지 않는다. 제8조 (확장) 업무 변화에 따라 시스템을 유연하게 확장한다.
-  </div>
+  
 </section>
 
 <!-- ─── 통계 ─── -->
